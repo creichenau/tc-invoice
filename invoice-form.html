@@ -1,90 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>T&K Services Field Ticket</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>T&K Services Field Ticket</title>
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 1rem;
-    background: #f5f5f5;
-  }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background: #f5f5f5;
+        }
 
-  .form-container {
-    max-width: 480px;
-    margin: auto;
-    background: white;
-    padding: 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-  }
+        .form-container {
+            max-width: 480px;
+            margin: auto;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
-  .invoice-container {
-    height: 829px;
-    width: 400px;
-    margin: auto;
-    background: white;
-    padding: 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    position: relative;
-  }
+        .invoice-container {
+            height: 829px;
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
 
-  label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: bold;
-  }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
 
-  input, textarea {
-    width: 95%;
-    padding: 0.75rem;
-    margin-top: 0.35rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
+        input,
+        textarea {
+            width: 95%;
+            padding: 0.75rem;
+            margin-top: 0.35rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
 
-  .invoice-container input, textarea {
-    width: 100px;
-    height: 3px;
-    position:absolute;
-  }
+        .invoice-container input,
+        textarea {
+            width: 100px;
+            height: 3px;
+            position: absolute;
+        }
 
-  textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
 
-  button {
-    margin-top: 1.5rem;
-    width: 100%;
-    padding: 0.9rem;
-    background: #0078d4;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1rem;
-  }
+        button {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.9rem;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+        }
 
-  #addLineItem {
-    background: #28a745;
-    margin-top: 1rem;
-  }
+        #addLineItem {
+            background: #28a745;
+            margin-top: 1rem;
+        }
 
-  .form-background {
-    background-image: url("images/invoice_form_v2.png");
-    background-size: cover;      /* fills the div */
-    background-position: center; /* keeps it centered */
-    background-repeat: no-repeat;
-    }
+        .form-background {
+            background-image: url("images/invoice_form_v2.png");
+            background-size: cover;
+            /* fills the div */
+            background-position: center;
+            /* keeps it centered */
+            background-repeat: no-repeat;
+        }
 
-</style>
+        .amount {
+            position: absolute;
+            left: 375px;
+        }
+    </style>
 </head>
 
 <body>
@@ -93,65 +102,79 @@
             <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" required />
             <input type="date" id="invoiceDate" style="left: 258px; top: 94px; width: 140px;" required />
             <input type="text" id="companyName" style="left: 90px; top: 134px; width: 308px;" required />
-            <input type="text" id="leaseNumber"  style="left: 152px; top: 180px; width: 250px;" />
-            <input type="text" id="loeNumber"  style="left: 152px; top: 234px; width: 250px;" />
-            <textarea id="jobDescription" style="left: 97px; top: 285px; width: 305px; height: 70px; min-height: 70px;"></textarea>
-            <input type="text" id="woNumber"  style="left: 115px; top: 389px; width: 286px;" />
+            <input type="text" id="leaseNumber" style="left: 152px; top: 180px; width: 250px;" />
+            <input type="text" id="loeNumber" style="left: 152px; top: 234px; width: 250px;" />
+            <textarea id="jobDescription"
+                style="left: 97px; top: 285px; width: 305px; height: 70px; min-height: 70px;"></textarea>
+            <input type="text" id="woNumber" style="left: 115px; top: 389px; width: 286px;" />
 
-            <input type="text" id="lineitem1_qty"  style="left: 14px; top: 469px; width: 19px;" />
-            <input type="text" id="lineitem1_name"  style="left: 64px; top: 469px; width: 205px;" />
-            <input type="text" id="lineitem1_rate"  style="left: 304px; top: 469px; width: 25px;" />
+            <input type="text" id="lineitem1_qty" style="left: 14px; top: 469px; width: 19px;" onchange="updateAmount('lineitem1_qty', 'lineitem1_rate', 'amount1')" />
+            <input type="text" id="lineitem1_name" style="left: 64px; top: 469px; width: 205px;" />
+            <input type="text" id="lineitem1_rate" style="left: 304px; top: 469px; width: 25px;" onchange="updateAmount('lineitem1_qty', 'lineitem1_rate', 'amount1')" />
+            <span class="amount" id="amount1" style="top: 481px;">$0.00</span>
 
-            <input type="text" id="lineitem2_qty"  style="left: 14px; top: 512px; width: 19px;" />
-            <input type="text" id="lineitem2_name"  style="left: 64px; top: 512px; width: 205px;" />
-            <input type="text" id="lineitem2_rate"  style="left: 304px; top: 512px; width: 25px;" />
+            <input type="text" id="lineitem2_qty" style="left: 14px; top: 512px; width: 19px;" />
+            <input type="text" id="lineitem2_name" style="left: 64px; top: 512px; width: 205px;" />
+            <input type="text" id="lineitem2_rate" style="left: 304px; top: 512px; width: 25px;" />
 
-            <input type="text" id="lineitem3_qty"  style="left: 14px; top: 555px; width: 19px;" />
-            <input type="text" id="lineitem3_name"  style="left: 64px; top: 555px; width: 205px;" />
-            <input type="text" id="lineitem3_rate"  style="left: 304px; top: 555px; width: 25px;" />
+            <input type="text" id="lineitem3_qty" style="left: 14px; top: 555px; width: 19px;" />
+            <input type="text" id="lineitem3_name" style="left: 64px; top: 555px; width: 205px;" />
+            <input type="text" id="lineitem3_rate" style="left: 304px; top: 555px; width: 25px;" />
 
-            <input type="text" id="lineitem4_qty"  style="left: 14px; top: 598px; width: 19px;" />
-            <input type="text" id="lineitem4_name"  style="left: 64px; top: 598px; width: 205px;" />
-            <input type="text" id="lineitem4_rate"  style="left: 304px; top: 598px; width: 25px;" />
+            <input type="text" id="lineitem4_qty" style="left: 14px; top: 598px; width: 19px;" />
+            <input type="text" id="lineitem4_name" style="left: 64px; top: 598px; width: 205px;" />
+            <input type="text" id="lineitem4_rate" style="left: 304px; top: 598px; width: 25px;" />
 
-            <input type="text" id="lineitem5_qty"  style="left: 14px; top: 640px; width: 19px;" />
-            <input type="text" id="lineitem5_name"  style="left: 64px; top: 640px; width: 205px;" />
-            <input type="text" id="lineitem5_rate"  style="left: 304px; top: 640px; width: 25px;" />
+            <input type="text" id="lineitem5_qty" style="left: 14px; top: 640px; width: 19px;" />
+            <input type="text" id="lineitem5_name" style="left: 64px; top: 640px; width: 205px;" />
+            <input type="text" id="lineitem5_rate" style="left: 304px; top: 640px; width: 25px;" />
 
-            <input type="text" id="lineitem6_qty"  style="left: 14px; top: 681px; width: 19px;" />
-            <input type="text" id="lineitem6_name"  style="left: 64px; top: 681px; width: 205px;" />
-            <input type="text" id="lineitem6_rate"  style="left: 304px; top: 681px; width: 25px;" />
+            <input type="text" id="lineitem6_qty" style="left: 14px; top: 681px; width: 19px;" />
+            <input type="text" id="lineitem6_name" style="left: 64px; top: 681px; width: 205px;" />
+            <input type="text" id="lineitem6_rate" style="left: 304px; top: 681px; width: 25px;" />
 
         </form>
     </div>
-  <div class="form-container">
-    
-    <form id="invoiceForm2">   
-      <button type="submit">Submit Invoice</button>
-    </form>
-  </div>
-<script>
-   document.getElementById("invoiceForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+    <div class="form-container">
 
-    // todo: add line items!
+        <form id="invoiceForm2">
+            <button type="submit">Submit Invoice</button>
+        </form>
+    </div>
+    <script>
 
-    const data = {
-      companyName: companyName.value,
-      invoiceNumber: invoiceNumber.value,
-      invoiceDate: invoiceDate.value,
-      leaseNumber: leaseNumber.value,
-      woNumber: woNumber.value,
-      jobDescription: jobDescription.value,
-      lineItems
-    };
+        function updateAmount(qtyIn, rateIn, output) {
+            const qty_el = document.getElementById(qtyIn);
+            const qty = parseFloat(qty_el.value) || 0;
+            const rate_el = document.getElementById(rateIn);
+            const rate = parseFloat(rate_el.value) || 0;
+            const amount = qty * rate;
+            document.getElementById(output).textContent = `$${amount.toFixed(2)}`;
+        }
 
-    console.log("Invoice Submitted:", data);
 
-    // TODO: send email here
-    alert("Invoice submitted!");
-  });
-</script>
+        document.getElementById("invoiceForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // todo: add line items!
+
+            const data = {
+                companyName: companyName.value,
+                invoiceNumber: invoiceNumber.value,
+                invoiceDate: invoiceDate.value,
+                leaseNumber: leaseNumber.value,
+                woNumber: woNumber.value,
+                jobDescription: jobDescription.value,
+                lineItems
+            };
+
+            console.log("Invoice Submitted:", data);
+
+            // TODO: send email here
+            alert("Invoice submitted!");
+        });
+    </script>
 
 </body>
+
 </html>
