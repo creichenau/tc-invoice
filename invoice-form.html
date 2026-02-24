@@ -24,8 +24,8 @@
   }
 
   .invoice-container {
-    height: 780px;
-    width: 480px;
+    height: 829px;
+    width: 400px;
     margin: auto;
     background: white;
     padding: 1.25rem;
@@ -33,24 +33,6 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     margin-bottom: 20px;
     position: relative;
-  }
-
-  .address-container {
-    text-align: center;
-    max-width: 480px;
-    margin: auto;
-    background: white;
-    padding: 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-
-  .address-container h3 {
-    font-size: medium;
-  }
-
-  .address-container h2 {
-    font-size: medium;
   }
 
   label {
@@ -70,30 +52,13 @@
 
   .invoice-container input, textarea {
     width: 100px;
-    height: 5px;
+    height: 3px;
     position:absolute;
   }
 
   textarea {
     min-height: 100px;
     resize: vertical;
-  }
-
-  .line-item {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    margin-top: 1rem;
-    border-radius: 6px;
-    background: #fafafa;
-  }
-
-  .remove-btn {
-    background: #d9534f;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.6rem;
-    border-radius: 4px;
-    margin-top: 0.5rem;
   }
 
   button {
@@ -113,7 +78,7 @@
   }
 
   .form-background {
-    background-image: url("images/invoice_form.png");
+    background-image: url("images/invoice_form_v2.png");
     background-size: cover;      /* fills the div */
     background-position: center; /* keeps it centered */
     background-repeat: no-repeat;
@@ -125,91 +90,26 @@
 <body>
     <div class="invoice-container form-background">
         <form id="invoiceForm">
-            <input type="text" id="invoiceNumber" style="left: 303px; top: 70px; width: 180px;" required />
-            <input type="date" id="invoiceDate" style="left: 303px; top: 105px; width: 180px;" required />
-            <input type="text" id="companyName" style="left: 90px; top: 131px; width: 180px;" required />
+            <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" required />
+            <input type="date" id="invoiceDate" style="left: 258px; top: 94px; width: 140px;" required />
+            <input type="text" id="companyName" style="left: 90px; top: 134px; width: 308px;" required />
+             <input type="text" id="leaseNumber"  style="left: 152px; top: 180px; width: 250px;" />
+             <input type="text" id="loeNumber"  style="left: 152px; top: 234px; width: 250px;" />
+             <textarea id="jobDescription" style="left: 97px; top: 285px; width: 305px; height: 70px; min-height: 70px;"></textarea>
+              <input type="text" id="woNumber"  style="left: 115px; top: 389px; width: 286px;" />
         </form>
     </div>
   <div class="form-container">
     
-    <form id="invoiceForm2">    
-
-      <label>Lease / Well Number</label>
-      <input type="text" id="leaseNumber" />
-
-      <label>WO / PO Number</label>
-      <input type="text" id="woNumber" />
-
-      <label>Job Description</label>
-      <textarea id="jobDescription"></textarea>
-
-      <h3>Line Items</h3>
-      <div id="lineItems"></div>
-
-      <button type="button" id="addLineItem">+ Add Line Item</button>
-
+    <form id="invoiceForm2">   
       <button type="submit">Submit Invoice</button>
     </form>
   </div>
-  <div class="address-container">
-    <h2>T&K Services</h2>
-    <h3>P.O. Box 67</h3>
-    <h3>Christoval, TX 76935</h3>
-    <h3>(325)450-5975</h3>
-  </div>
-
 <script>
-  const lineItemsDiv = document.getElementById("lineItems");
-  const addLineItemBtn = document.getElementById("addLineItem");
-
-  addLineItemBtn.addEventListener("click", () => {
-    const item = document.createElement("div");
-    item.className = "line-item";
-
-    item.innerHTML = `
-      <label>Quantity</label>
-      <input type="number" class="qty" min="0" step="1" required />
-
-      <label>Description</label>
-      <input type="text" class="desc" required />
-
-      <label>Rate</label>
-      <input type="number" class="rate" min="0" step="0.01" required />
-
-      <label>Amount: <span class="amount">$0.00</span></label>
-
-      <button type="button" class="remove-btn">Remove</button>
-    `;
-
-    item.querySelector(".remove-btn").addEventListener("click", () => {
-      item.remove();
-    });   
-
-    const qtyInput = item.querySelector(".qty");
-    const rateInput = item.querySelector(".rate");
-    const amountLabel = item.querySelector(".amount");
-
-    function updateAmount() {
-        const qty = parseFloat(qtyInput.value) || 0;
-        const rate = parseFloat(rateInput.value) || 0;
-        const amount = qty * rate;
-        amountLabel.textContent = `$${amount.toFixed(2)}`;
-    }
-
-    qtyInput.addEventListener("input", updateAmount);
-    rateInput.addEventListener("input", updateAmount);
-
-    lineItemsDiv.appendChild(item);
-  });
-
-  document.getElementById("invoiceForm").addEventListener("submit", function(e) {
+   document.getElementById("invoiceForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const lineItems = [...document.querySelectorAll(".line-item")].map(item => ({
-      quantity: item.querySelector(".qty").value,
-      description: item.querySelector(".desc").value,
-      rate: item.querySelector(".rate").value
-    }));
+    // todo: add line items!
 
     const data = {
       companyName: companyName.value,
