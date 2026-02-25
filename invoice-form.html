@@ -91,7 +91,7 @@
 
         .amount {
             position: absolute;
-            left: 375px;
+            left: 367px;
         }
     </style>
 </head>
@@ -108,30 +108,39 @@
                 style="left: 97px; top: 285px; width: 305px; height: 70px; min-height: 70px;"></textarea>
             <input type="text" id="woNumber" style="left: 115px; top: 389px; width: 286px;" />
 
-            <input type="text" id="lineitem1_qty" style="left: 14px; top: 469px; width: 19px;" onchange="updateAmount('lineitem1_qty', 'lineitem1_rate', 'amount1')" />
+            <input type="text" id="lineitem1_qty" style="left: 14px; top: 469px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem1_name" style="left: 64px; top: 469px; width: 205px;" />
-            <input type="text" id="lineitem1_rate" style="left: 304px; top: 469px; width: 25px;" onchange="updateAmount('lineitem1_qty', 'lineitem1_rate', 'amount1')" />
+            <input type="text" id="lineitem1_rate" style="left: 304px; top: 469px; width: 25px;" onchange="updateAmount()" />
             <span class="amount" id="amount1" style="top: 481px;">$0.00</span>
 
-            <input type="text" id="lineitem2_qty" style="left: 14px; top: 512px; width: 19px;" />
+            <input type="text" id="lineitem2_qty" style="left: 14px; top: 512px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem2_name" style="left: 64px; top: 512px; width: 205px;" />
-            <input type="text" id="lineitem2_rate" style="left: 304px; top: 512px; width: 25px;" />
+            <input type="text" id="lineitem2_rate" style="left: 304px; top: 512px; width: 25px;" onchange="updateAmount()" />
+            <span class="amount" id="amount2" style="top: 524px;">$0.00</span>
 
-            <input type="text" id="lineitem3_qty" style="left: 14px; top: 555px; width: 19px;" />
+            <input type="text" id="lineitem3_qty" style="left: 14px; top: 555px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem3_name" style="left: 64px; top: 555px; width: 205px;" />
-            <input type="text" id="lineitem3_rate" style="left: 304px; top: 555px; width: 25px;" />
+            <input type="text" id="lineitem3_rate" style="left: 304px; top: 555px; width: 25px;" onchange="updateAmount()" />
+            <span class="amount" id="amount3" style="top: 567px;">$0.00</span>
 
-            <input type="text" id="lineitem4_qty" style="left: 14px; top: 598px; width: 19px;" />
+            <input type="text" id="lineitem4_qty" style="left: 14px; top: 598px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem4_name" style="left: 64px; top: 598px; width: 205px;" />
-            <input type="text" id="lineitem4_rate" style="left: 304px; top: 598px; width: 25px;" />
+            <input type="text" id="lineitem4_rate" style="left: 304px; top: 598px; width: 25px;" onchange="updateAmount()" />
+            <span class="amount" id="amount4" style="top: 610px;">$0.00</span>
 
-            <input type="text" id="lineitem5_qty" style="left: 14px; top: 640px; width: 19px;" />
+            <input type="text" id="lineitem5_qty" style="left: 14px; top: 640px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem5_name" style="left: 64px; top: 640px; width: 205px;" />
-            <input type="text" id="lineitem5_rate" style="left: 304px; top: 640px; width: 25px;" />
+            <input type="text" id="lineitem5_rate" style="left: 304px; top: 640px; width: 25px;" onchange="updateAmount()" />
+            <span class="amount" id="amount5" style="top: 652px;">$0.00</span>
 
-            <input type="text" id="lineitem6_qty" style="left: 14px; top: 681px; width: 19px;" />
+            <input type="text" id="lineitem6_qty" style="left: 14px; top: 681px; width: 19px;" onchange="updateAmount()" />
             <input type="text" id="lineitem6_name" style="left: 64px; top: 681px; width: 205px;" />
-            <input type="text" id="lineitem6_rate" style="left: 304px; top: 681px; width: 25px;" />
+            <input type="text" id="lineitem6_rate" style="left: 304px; top: 681px; width: 25px;" onchange="updateAmount()" />
+            <span class="amount" id="amount6" style="top: 693px;">$0.00</span>
+
+            <span class="amount" id="amountSubtotal" style="top: 752px; left: 323px;">$0.00</span>
+            <span class="amount" id="amountTax" style="top: 796px; left: 323px;">$0.00</span>
+            <span class="amount" id="amountTotal" style="top: 836px; left: 323px;">$0.00</span>
 
         </form>
     </div>
@@ -143,13 +152,23 @@
     </div>
     <script>
 
-        function updateAmount(qtyIn, rateIn, output) {
-            const qty_el = document.getElementById(qtyIn);
-            const qty = parseFloat(qty_el.value) || 0;
-            const rate_el = document.getElementById(rateIn);
-            const rate = parseFloat(rate_el.value) || 0;
-            const amount = qty * rate;
-            document.getElementById(output).textContent = `$${amount.toFixed(2)}`;
+        function updateAmount() {
+            let subTotal = 0;
+            for(let i = 1; i<7; i++) {
+                let qty_el = document.getElementById('lineitem' + i + '_qty');
+                let qty = parseFloat(qty_el.value) || 0;
+                let rate_el = document.getElementById('lineitem' + i + '_rate');
+                let rate = parseFloat(rate_el.value) || 0;
+                let amount = qty * rate;
+                document.getElementById('amount' + i).textContent = `$${amount.toFixed(2)}`;
+                subTotal = subTotal + amount;
+            }
+            document.getElementById('amountSubtotal').textContent = `$${subTotal.toFixed(2)}`;
+        
+            let taxAmount = subTotal * 0.0825;
+            let totalAmount = subTotal + taxAmount;
+            document.getElementById('amountTax').textContent = `$${taxAmount.toFixed(2)}`;
+            document.getElementById('amountTotal').textContent = `$${totalAmount.toFixed(2)}`;
         }
 
 
