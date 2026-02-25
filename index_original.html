@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>T&K Services Field Ticket</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    background: #f5f5f5;
+  }
+
+  .form-container {
+    max-width: 480px;
+    margin: auto;
+    background: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  .address-container {
+    text-align: center;
+    max-width: 480px;
+    margin: auto;
+    background: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .address-container h3 {
+    font-size: medium;
+  }
+
+  .address-container h2 {
+    font-size: medium;
+  }
+
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 95%;
+    padding: 0.75rem;
+    margin-top: 0.35rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .line-item {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    background: #fafafa;
+  }
+
+  .remove-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+  }
+
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.9rem;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+  }
+
+  #addLineItem {
+    background: #28a745;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h2>T&K Services Field Ticket</h2>
+
+    <form id="invoiceForm">
+      <label>Company Name</label>
+      <input type="text" id="companyName" required />
+
+      <label>Invoice Number</label>
+      <input type="text" id="invoiceNumber" required />
+
+      <label>Invoice Date</label>
+      <input type="date" id="invoiceDate" required />
+
+      <label>Lease / Well Number</label>
+      <input type="text" id="leaseNumber" />
+
+      <label>WO / PO Number</label>
+      <input type="text" id="woNumber" />
+
+      <label>Job Description</label>
+      <textarea id="jobDescription"></textarea>
+
+      <h3>Line Items</h3>
+      <div id="lineItems"></div>
+
+      <button type="button" id="addLineItem">+ Add Line Item</button>
+
+      <button type="submit">Submit Invoice</button>
+    </form>
+  </div>
+  <div class="address-container">
+    <h2>T&K Services</h2>
+    <h3>P.O. Box 67</h3>
+    <h3>Christoval, TX 76935</h3>
+    <h3>(325)450-5975</h3>
+  </div>
+
+<script>
+  const lineItemsDiv = document.getElementById("lineItems");
+  const addLineItemBtn = document.getElementById("addLineItem");
+
+  addLineItemBtn.addEventListener("click", () => {
+    const item = document.createElement("div");
+    item.className = "line-item";
+
+    item.innerHTML = `
+      <label>Quantity</label>
+      <input type="number" class="qty" min="0" step="1" required />
+
+      <label>Description</label>
+      <input type="text" class="desc" required />
+
+      <label>Rate</label>
+      <input type="number" class="rate" min="0" step="0.01" required />
+
+      <label>Amount: <span class="amount">$0.00</span></label>
+
+      <button type="button" class="remove-btn">Remove</button>
+    `;
+
+    item.querySelector(".remove-btn").addEventListener("click", () => {
+      item.remove();
+    });   
+
+    const qtyInput = item.querySelector(".qty");
+    const rateInput = item.querySelector(".rate");
+    const amountLabel = item.querySelector(".amount");
+
+    function updateAmount() {
+        const qty = parseFloat(qtyInput.value) || 0;
+        const rate = parseFloat(rateInput.value) || 0;
+        const amount = qty * rate;
+        amountLabel.textContent = `$${amount.toFixed(2)}`;
+    }
+
+    qtyInput.addEventListener("input", updateAmount);
+    rateInput.addEventListener("input", updateAmount);
+
+    lineItemsDiv.appendChild(item);
+  });
+
+  document.getElementById("invoiceForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const lineItems = [...document.querySelectorAll(".line-item")].map(item => ({
+      quantity: item.querySelector(".qty").value,
+      description: item.querySelector(".desc").value,
+      rate: item.querySelector(".rate").value
+    }));
+
+    const data = {
+      companyName: companyName.value,
+      invoiceNumber: invoiceNumber.value,
+      invoiceDate: invoiceDate.value,
+      leaseNumber: leaseNumber.value,
+      woNumber: woNumber.value,
+      jobDescription: jobDescription.value,
+      lineItems
+    };
+
+    console.log("Invoice Submitted:", data);
+
+    // TODO: send email here
+    alert("Invoice submitted!");
+  });
+</script>
+
+</body>
+</html>
