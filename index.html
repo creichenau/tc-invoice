@@ -13,7 +13,7 @@
             emailjs.init({
                 publicKey: "u2kD264US6flsgLA0",
             });
-        })();
+        })();            
     </script>
 
     <style>
@@ -91,7 +91,7 @@
         }
 
         .form-background {
-            background-image: url("images/invoice_form_v2.png");
+            background-image: url("images/invoice_form.png");
             background-size: cover;
             /* fills the div */
             background-position: center;
@@ -111,15 +111,13 @@
     <form id="invoiceForm">
         <div class="invoice-container form-background">
 
-            <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" required />
+            <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" disabled />
             <input type="date" id="invoiceDate" style="left: 258px; top: 94px; width: 140px;" required />
             <input type="text" id="companyName" style="left: 90px; top: 134px; width: 308px;" required />
             <input type="text" id="leaseNumber" style="left: 152px; top: 180px; width: 250px;" />
-            <input type="text" id="loeNumber" style="left: 152px; top: 234px; width: 250px;" />
             <textarea id="jobDescription"
-                style="left: 97px; top: 285px; width: 305px; height: 70px; min-height: 70px;"></textarea>
-            <input type="text" id="woNumber" style="left: 115px; top: 389px; width: 286px;" />
-
+                style="left: 97px; top: 233px; width: 305px; height: 165px; min-height: 70px;"></textarea>
+            
             <input type="text" id="lineitem1_qty" style="left: 14px; top: 469px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem1_name" style="left: 64px; top: 469px; width: 205px;" />
@@ -190,7 +188,9 @@
             document.getElementById('amountTax').textContent = `$${taxAmount.toFixed(2)}`;
             document.getElementById('amountTotal').textContent = `$${totalAmount.toFixed(2)}`;
         }
-
+        
+        // load the next invoice number...
+        document.getElementById('invoiceNumber').value = "000001";
 
         document.getElementById("invoiceForm").addEventListener("submit", function (e) {
             e.preventDefault();
