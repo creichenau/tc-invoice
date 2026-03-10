@@ -244,13 +244,21 @@
                     });
                 }
             }
+
+            subTotal = document.getElementById('amountSubtotal').textContent;
+            taxAmount = document.getElementById('amountTax').textContent;
+            totalAmount = document.getElementById('amountTotal').textContent;
+
             const data = {
                 companyName: companyName.value,
                 invoiceNumber: invoiceNumber.value,
                 invoiceDate: invoiceDate.value,
                 leaseNumber: leaseNumber.value,
                 jobDescription: jobDescription.value,
-                lineItems: lineItems
+                lineItems: lineItems,
+                subTotal: subTotal,
+                taxAmount: taxAmount,
+                totalAmount: totalAmount
             };
 
             console.log("Invoice Submitted:", data);
