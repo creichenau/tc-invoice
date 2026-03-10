@@ -111,7 +111,7 @@
     <form id="invoiceForm">
         <div class="invoice-container form-background">
 
-            <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" disabled />
+            <input type="text" id="invoiceNumber" style="left: 258px; top: 56px; width: 140px;" />
             <input type="date" id="invoiceDate" style="left: 258px; top: 94px; width: 140px;" required />
             <input type="text" id="companyName" style="left: 90px; top: 134px; width: 308px;" required />
             <input type="text" id="leaseNumber" style="left: 152px; top: 180px; width: 250px;" />
@@ -121,42 +121,42 @@
             <input type="text" id="lineitem1_qty" style="left: 14px; top: 469px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem1_name" style="left: 64px; top: 469px; width: 205px;" />
-            <input type="text" id="lineitem1_rate" style="left: 304px; top: 469px; width: 25px;"
+            <input type="text" id="lineitem1_rate" style="left: 298px; top: 469px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount1" style="top: 481px;">$0.00</span>
 
             <input type="text" id="lineitem2_qty" style="left: 14px; top: 512px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem2_name" style="left: 64px; top: 512px; width: 205px;" />
-            <input type="text" id="lineitem2_rate" style="left: 304px; top: 512px; width: 25px;"
+            <input type="text" id="lineitem2_rate" style="left: 298px; top: 512px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount2" style="top: 524px;">$0.00</span>
 
             <input type="text" id="lineitem3_qty" style="left: 14px; top: 555px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem3_name" style="left: 64px; top: 555px; width: 205px;" />
-            <input type="text" id="lineitem3_rate" style="left: 304px; top: 555px; width: 25px;"
+            <input type="text" id="lineitem3_rate" style="left: 298px; top: 555px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount3" style="top: 567px;">$0.00</span>
 
             <input type="text" id="lineitem4_qty" style="left: 14px; top: 598px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem4_name" style="left: 64px; top: 598px; width: 205px;" />
-            <input type="text" id="lineitem4_rate" style="left: 304px; top: 598px; width: 25px;"
+            <input type="text" id="lineitem4_rate" style="left: 298px; top: 598px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount4" style="top: 610px;">$0.00</span>
 
             <input type="text" id="lineitem5_qty" style="left: 14px; top: 640px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem5_name" style="left: 64px; top: 640px; width: 205px;" />
-            <input type="text" id="lineitem5_rate" style="left: 304px; top: 640px; width: 25px;"
+            <input type="text" id="lineitem5_rate" style="left: 298px; top: 640px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount5" style="top: 652px;">$0.00</span>
 
             <input type="text" id="lineitem6_qty" style="left: 14px; top: 681px; width: 19px;"
                 onchange="updateAmount()" />
             <input type="text" id="lineitem6_name" style="left: 64px; top: 681px; width: 205px;" />
-            <input type="text" id="lineitem6_rate" style="left: 304px; top: 681px; width: 25px;"
+            <input type="text" id="lineitem6_rate" style="left: 298px; top: 681px; width: 40px;"
                 onchange="updateAmount()" />
             <span class="amount" id="amount6" style="top: 693px;">$0.00</span>
 
@@ -169,6 +169,44 @@
         </div>
     </form>
     <script>
+
+        async function loadInvoiceNumber() {
+            try {
+                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getnextinvoicenumber');
+                const data = await response.json();
+
+                console.log('Current invoice number:', data.invoiceNumber);
+
+                document.getElementById('invoiceNumber').value = data.invoiceNumber;
+            } catch (err) {
+                console.error('Error fetching invoice number:', err);
+            }
+        }
+
+        async function claimInvoiceNumber(index) {
+            try {
+                const numericIndex = Number(index);
+                const response = await fetch("https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/claimInvoiceNumber", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ index: numericIndex })
+                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Previous index:", data.previousIndex);
+                return data.previousIndex;
+
+            } catch (err) {
+                console.error("Error claiming invoice number:", err);
+                return null;
+            }
+        }
 
         function updateAmount() {
             let subTotal = 0;
@@ -190,7 +228,7 @@
         }
         
         // load the next invoice number...
-        document.getElementById('invoiceNumber').value = "000001";
+       loadInvoiceNumber();
 
         document.getElementById("invoiceForm").addEventListener("submit", function (e) {
             e.preventDefault();
@@ -211,12 +249,13 @@
                 invoiceNumber: invoiceNumber.value,
                 invoiceDate: invoiceDate.value,
                 leaseNumber: leaseNumber.value,
-                woNumber: woNumber.value,
                 jobDescription: jobDescription.value,
                 lineItems: lineItems
             };
 
             console.log("Invoice Submitted:", data);
+
+            claimInvoiceNumber(data.invoiceNumber);
 
             emailjs.send("service_ffzq9qn", "template_pr8w3ob", data)
                 .then(() => {
