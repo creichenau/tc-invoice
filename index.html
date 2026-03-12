@@ -276,12 +276,13 @@
 
         async function loadInvoiceNumber(userCode) {
             try {
-                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getnextinvoicenumber');
-                const data = await response.json();
+                //const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getnextinvoicenumber');
+                //const data = await response.json();
 
-                console.log('Current invoice number:', data.invoiceNumber);
-
-                document.getElementById('ticketNumber').textContent = userCode.toUpperCase() + data.invoiceNumber;
+                //console.log('Current invoice number:', data.invoiceNumber);
+                let invoiceNumber = "001"
+                document.getElementById('ticketNumber').textContent = userCode.toUpperCase() + invoiceNumber;
+            
             } catch (err) {
                 console.error('Error fetching invoice number:', err);
             }
