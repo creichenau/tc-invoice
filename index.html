@@ -379,11 +379,9 @@
             userId = document.getElementById('userId').textContent;
             fullTicketNumber = document.getElementById('fullTicketNumber').textContent;
 
-            console.log(taxAmount);
             if (isNaN(taxAmount) || taxAmount == "") {
                 taxAmount = 0;
             }
-            console.log(taxAmount);
 
             const data = {
                 invoiceId: 0,
