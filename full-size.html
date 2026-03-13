@@ -86,6 +86,28 @@
             <span id="taxAmount" style="position:absolute; top: 1068px; left: 726px; font-size: 14pt;">$0.00</span>
             <span id="totalAmount" style="position:absolute; top: 1105px; left: 726px; font-size: 14pt;">$0.00</span>
             <span id="receivedBy" style="position:absolute; top: 1102px; left: 183px; font-size: 14pt;"></span>
+        
+            <!-- Line Items -->
+            <span id="lineitem_qty_1" style="position:absolute; top: 571px; left: 65px; font-size: 14pt;"></span>
+            <span id="lineitem_name_1" style="position:absolute; top: 571px; left: 155px; font-size: 14pt;"></span>
+            <span id="lineitem_rate_1" style="position:absolute; top: 571px; left: 688px; font-size: 14pt;"></span>
+            <span id="lineitem_amount_1" style="position:absolute; top: 571px; left: 794px; font-size: 14pt;"></span>
+
+            <span id="lineitem_qty_2" style="position:absolute; top: 609px; left: 65px; font-size: 14pt;"></span>
+            <span id="lineitem_name_2" style="position:absolute; top: 609px; left: 155px; font-size: 14pt;"></span>
+            <span id="lineitem_rate_2" style="position:absolute; top: 609px; left: 688px; font-size: 14pt;"></span>
+            <span id="lineitem_amount_2" style="position:absolute; top: 609px; left: 794px; font-size: 14pt;"></span>
+
+            <span id="lineitem_qty_3" style="position:absolute; top: 643px; left: 65px; font-size: 14pt;"></span>
+            <span id="lineitem_name_3" style="position:absolute; top: 643px; left: 155px; font-size: 14pt;"></span>
+            <span id="lineitem_rate_3" style="position:absolute; top: 643px; left: 688px; font-size: 14pt;"></span>
+            <span id="lineitem_amount_3" style="position:absolute; top: 643px; left: 794px; font-size: 14pt;"></span>
+
+             <span id="lineitem_qty_4" style="position:absolute; top: 643px; left: 65px; font-size: 14pt;"></span>
+            <span id="lineitem_name_4" style="position:absolute; top: 643px; left: 155px; font-size: 14pt;"></span>
+            <span id="lineitem_rate_4" style="position:absolute; top: 643px; left: 688px; font-size: 14pt;"></span>
+            <span id="lineitem_amount_4" style="position:absolute; top: 643px; left: 794px; font-size: 14pt;"></span>
+        
         </div>
     </form>
     <div class="center-screen">
@@ -127,9 +149,24 @@
                     document.getElementById('receivedBy').textContent = data.invoice.receivedBy;
 
                     // line items
+                    let cnt = 1;
+                    let subTotal = 0;
+                    data.invoice.lineItems.forEach(lineItem => {
+                        let amt = Number(lineItem.quantity * lineItem.rate);
+                        document.getElementById('lineitem_qty_' + cnt).textContent = lineItem.quantity;
+                        document.getElementById('lineitem_name_' + cnt).textContent = lineItem.name;
+                        document.getElementById('lineitem_rate_' + cnt).textContent = `$${lineItem.rate.toFixed(2)}`;
+                        document.getElementById('lineitem_amount_' + cnt).textContent = `$${amt.toFixed(2)}`;
+                        subTotal = subTotal + amt;
+                        cnt = cnt + 1;
+                    });
 
-                    // calculations
-                    // todo: calculate the subtotal and total amounts
+                    // calculations                                       
+                    let taxAmount = data.invoice.taxAmount | 0;                    
+                    let totalAmount = taxAmount + subTotal;
+                    document.getElementById('taxAmount').textContent = `$${taxAmount.toFixed(2)}`;
+                    document.getElementById('subTotal').textContent = `$${subTotal.toFixed(2)}`;
+                    document.getElementById('totalAmount').textContent = `$${totalAmount.toFixed(2)}`;
                                         
                     // submission details 
                     document.getElementById('submittedBy').textContent = data.invoice.user;

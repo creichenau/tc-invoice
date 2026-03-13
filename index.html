@@ -158,6 +158,13 @@
 </head>
 
 <body>
+     <div id="errorMessage" class="center-screen" style="display:none;">
+        <b>Error Submitting Invoice</b><br>
+        <br />
+        <div>
+            Please try again or contact support.
+        </div>
+    </div>
     <div id="userCodeErrorMessage" class="center-screen" style="display:none;">
         <b>No User Code Detected</b><br>
         <br />
@@ -271,6 +278,13 @@
     </form>
     <script>
 
+        function showErrorMessage() {
+            document.getElementById('errorMessage').style.display = "block";
+            document.getElementById('loadingMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "none";
+            document.getElementById('userCodeErrorMessage').style.display = "none";
+        }
+
         async function loadUserData(userCode) {
             try {
                 const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getUser?userCode=' + userCode);
@@ -314,13 +328,13 @@
                     setTimeout(() => {
                         location.reload();
                    }, 5000);
-                })
-                .catch(err => alert("Error sending email: " + err));
-
+                });
+                
                 return true;
 
             } catch (err) {
-                console.error("Error claiming invoice number:", err);
+                showErrorMessage();
+                console.error("Error submitting invoice:", err);
                 return null;
             }
         }
