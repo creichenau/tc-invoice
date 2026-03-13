@@ -305,6 +305,18 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
+                const retData = await response.json();
+                data.invoiceId = retData.invoiceId;
+                console.log(data);
+
+                emailjs.send("service_ffzq9qn", "template_pr8w3ob", data)
+                .then(() => {
+                    setTimeout(() => {
+                        location.reload();
+                   }, 5000);
+                })
+                .catch(err => alert("Error sending email: " + err));
+
                 return true;
 
             } catch (err) {
@@ -367,7 +379,14 @@
             userId = document.getElementById('userId').textContent;
             fullTicketNumber = document.getElementById('fullTicketNumber').textContent;
 
+            console.log(taxAmount);
+            if (isNaN(taxAmount) || taxAmount == "") {
+                taxAmount = 0;
+            }
+            console.log(taxAmount);
+
             const data = {
+                invoiceId: 0,
                 userId: userId,
                 user: userName,
                 fullTicketNumber: fullTicketNumber,
@@ -389,15 +408,7 @@
             document.getElementById('loadingMessage').style.display = "block";
             document.getElementById('invoiceForm').style.display = "none";
 
-            saveInvoice(data);
-
-            emailjs.send("service_ffzq9qn", "template_pr8w3ob", data)
-                .then(() => {
-                    setTimeout(() => {
-                        location.reload();
-                   }, 5000);
-                })
-                .catch(err => alert("Error sending email: " + err));
+            saveInvoice(data);            
         });
     </script>
 
