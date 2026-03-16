@@ -83,6 +83,15 @@
             resize: vertical;
         }
 
+        .center-screen {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            /* horizontal centering */
+            text-align: center;
+            /* keeps multi-line text centered */
+        }
+
         button {
             margin-top: 1.5rem;
             width: 100%;
@@ -158,6 +167,10 @@
 </head>
 
 <body>
+     <div id="loadingMessage" style="display:none; margin-top: 30px;">
+        <b class="center-screen">Loading...</b>
+        <div id="loader" class="spinner"></div>
+    </div>
      <div id="errorMessage" class="center-screen" style="display:none;">
         <b>Error Submitting Invoice</b><br>
         <br />
@@ -172,7 +185,7 @@
             Please contact support and ask for a valid URL that includes the correct user code.
         </div>
     </div>
-    <div id="loadingMessage" style="display:none; margin-top: 30px;">
+    <div id="submittingMessage" style="display:none; margin-top: 30px;">
         <b style="margin-left: 44%">Submitting Invoice...</b>
         <div id="loader" class="spinner"></div>
     </div>
@@ -278,11 +291,28 @@
     </form>
     <script>
 
+        function showLoading() {
+            document.getElementById('errorMessage').style.display = "none";
+            document.getElementById('loadingMessage').style.display = "block";
+            document.getElementById('submittingMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "none";
+            document.getElementById('userCodeErrorMessage').style.display = "none";
+        }
+
+        function hideLoading() {
+            document.getElementById('errorMessage').style.display = "none";
+            document.getElementById('loadingMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "block";
+            document.getElementById('submittingMessage').style.display = "none";
+            document.getElementById('userCodeErrorMessage').style.display = "none";
+        }
+
         function showErrorMessage() {
             document.getElementById('errorMessage').style.display = "block";
             document.getElementById('loadingMessage').style.display = "none";
             document.getElementById('invoiceForm').style.display = "none";
             document.getElementById('userCodeErrorMessage').style.display = "none";
+            document.getElementById('submittingMessage').style.display = "none";
         }
 
         async function loadUserData(userCode) {
@@ -291,15 +321,17 @@
                 const data = await response.json();
 
                 if (response.status == 400) {
+                    hideLoading();
                     document.getElementById('invoiceForm').style.display = "none";
                     document.getElementById('userCodeErrorMessage').style.display = "block";
-                } else {
+                } else {                    
                     document.getElementById('userId').textContent = data.userId;
                     document.getElementById('userName').textContent = data.name;
                     document.getElementById('fullTicketNumber').textContent = data.preface + data.nextTicketNumber;
                     document.getElementById('ticketNumber').textContent = data.nextTicketNumber;
+                    hideLoading();
                 }
-
+               
             } catch (err) {
                 console.error('Error fetching user data:', err);
             }
@@ -360,6 +392,7 @@
             document.getElementById('amountTotal').textContent = `$${totalAmount.toFixed(2)}`;
         }
 
+        showLoading();
         const params = new URLSearchParams(window.location.search);
         const userCode = params.get("usr");
         console.log("User code:", userCode);
