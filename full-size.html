@@ -141,7 +141,7 @@
         </div>
     </form>
     <div class="center-screen">
-        <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>.</p>
+        <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>. <a id="editLink" href='#'>Edit</a></p>
     </div>
     <script>
 
@@ -228,6 +228,9 @@
             // submission details 
             document.getElementById('submittedBy').textContent = data.invoice.user;
             document.getElementById('submittedDttm').textContent = new Date(data.invoice.submittedDttm).toLocaleString();
+
+
+            document.getElementById('editLink').href = '/full-edit.html?id=' + data.invoice.invoiceId;
 
             hideLoader();
         }

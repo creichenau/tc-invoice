@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>T&K Services Field Ticket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background: #f5f5f5;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 5px solid #ccc;
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        button {
+            width: 200px;
+            margin-top: 1.5rem;
+            padding: 0.9rem;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+        }
+
+        .invoice-container {
+            height: 1200px;
+            width: 915px;
+            margin: auto;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-background {
+            background-image: url("images/full_size_field_ticket.png");
+            background-size: cover;
+            /* fills the div */
+            background-position: center;
+            /* keeps it centered */
+            background-repeat: no-repeat;
+        }
+
+        .center-screen {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            /* horizontal centering */
+            text-align: center;
+            /* keeps multi-line text centered */
+        }
+
+        .center-container {
+            display: flex;
+            justify-content: center;   /* horizontal centering */
+            align-items: center;       /* vertical centering */
+            height: 100vh;             /* full screen height */
+        }
+
+         .line_item_qty {
+           position: absolute;
+           width: 57px !important;
+           left: 59px !important;
+           height: 20px;
+        }
+
+        .line_item_name {
+            position:absolute; 
+            width: 516px !important;
+            left: 148px !important;
+            height: 20px;
+        }
+
+        .line_item_rate {
+            position:absolute; 
+            width: 70px !important;
+            left: 688px !important;
+            height: 20px;
+        }
+
+        .line_item_amount {
+            position:absolute; 
+            width: 188px !important;
+            left: 64px !important;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="loadingMessage" style="display:none; margin-top: 30px;">
+        <b style="margin-left: 47%">Loading Invoice...</b>
+        <div id="loader" class="spinner"></div>
+    </div>
+    <div id="invoiceIdErrorMessage" class="center-screen" style="display:none;">
+        <b>No Invoice ID Detected</b><br>
+        <br />
+        <div>
+            Please contact support and ask for a valid URL that includes a valid invoice ID.
+        </div>
+    </div>
+    <form id="invoiceForm">
+        <div class="invoice-container form-background">
+            <input type="text" style="visibility: hidden;" id="invoiceId"></input>
+            <span id="ticketNumber" style="position:absolute; top: 97px; left: 723px; font-size: 18pt;"></span>
+            <input type="text"  id="invoiceNumber" style="position:absolute; top: 142px; width: 262px; left: 580px; font-size: 14pt;"></input>
+            <input type="date" id="invoiceDate" style="position:absolute; top: 182px; width:262px; left: 580px; font-size: 14pt;"></input>
+            <input type="text" id="companyName" style="position:absolute; top: 218px; width:646px; left: 194px; font-size: 14pt;"></input>
+            <textarea id="leaseWellNumber" style="position:absolute; width:537px; top: 253px; left: 305px; font-size: 14pt;"></textarea>
+            <textarea id="jobDescription" style="position:absolute; width: 637px; height: 178px; top: 316px; left: 206px; font-size: 14pt;"></textarea>
+            <span id="subTotal" style="position:absolute; top: 1032px; left: 726px; font-size: 14pt;">$0.00</span>
+            <input type="text" id="taxAmount" style="position:absolute; top: 1062px; width: 176px; left: 709px; font-size: 14pt;" onchange="updateAmount()"></input>
+            <span id="totalAmount" style="position:absolute; top: 1105px; left: 726px; font-size: 14pt;">$0.00</span>
+            <input type="text" id="receivedBy" style="position:absolute; top: 1098px; width: 339px; left: 183px; font-size: 14pt;"></input>
+
+            <!-- Line Items -->
+            <input type="text" class="line_item_qty" id="lineitem_qty_1" style="top: 568px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_1" style="top: 568px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_1" style="top: 568px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_1" style="position:absolute; top: 571px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_2" style="top: 605px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_2" style="top: 605px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_2" style="top: 608px" onchange="updateAmount()"></span>
+            <span id="lineitem_amount_2" style="position:absolute; top: 609px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_3" style="top: 639px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_3" style="top: 639px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_3" style="top: 639px;" onchange="updateAmount()"></span>
+            <span id="lineitem_amount_3" style="position:absolute; top: 643px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_4" style="top: 675px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_4" style="top: 675px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_4" style="top: 675px;" onchange="updateAmount()"></span>
+            <span id="lineitem_amount_4" style="position:absolute; top: 678px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_5" style="top: 712px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_5" style="top: 712px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_5" style="top: 712px;" onchange="updateAmount()"></span>
+            <span id="lineitem_amount_5" style="position:absolute; top: 715px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_6" style="top: 748px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_6" style="top: 748px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_6" style="top: 748px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_6" style="position:absolute; top: 751px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_7" style="top: 782px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_7" style="top: 782px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_7" style="top: 782px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_7" style="position:absolute; top: 786px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_8" style="top: 817px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_8" style="top: 817px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_8" style="top: 817px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_8" style="position:absolute; top: 821px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty" id="lineitem_qty_9" style="top: 853px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_9" style="top: 853px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_9" style="top: 853px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_9" style="position:absolute; top: 857px; left: 794px; font-size: 14pt;"></span>
+
+            <input type="text" class="line_item_qty"  id="lineitem_qty_10" style="top: 889px;" onchange="updateAmount()"></input>
+            <input type="text" class="line_item_name" id="lineitem_name_10" style="top: 889px;"></input>
+            <input type="text" class="line_item_rate" id="lineitem_rate_10" style="top: 889px;" onchange="updateAmount()"></input>
+            <span id="lineitem_amount_10" style="position:absolute; top: 893px; left: 794px; font-size: 14pt;"></span>
+
+        </div>
+        <div class="center-screen">
+            <button type="submit">Save Changes</button>
+        </div>        
+    </form>
+    <div class="center-screen">
+        <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>.</p>
+    </div>
+    <script>
+
+        function showLoader() {
+            document.getElementById('loadingMessage').style.display = "block";
+            document.getElementById('invoiceForm').style.display = "none";
+            document.getElementById('invoiceIdErrorMessage').style.display = "none";
+        }
+
+        function hideLoader() {
+            document.getElementById('loadingMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "block";
+            document.getElementById('invoiceIdErrorMessage').style.display = "none";
+        }
+
+        function updateAmount() {
+            let subTotal = 0;
+            for (let i = 1; i < 11; i++) {
+                let qty_el = document.getElementById('lineitem_qty_' + i);
+                let qty = parseFloat(qty_el.value) || 0;
+                let rate_el = document.getElementById('lineitem_rate_' + i);
+                let rate = parseFloat(rate_el.value) || 0;
+                let amount = qty * rate;
+                document.getElementById('lineitem_amount_' + i).textContent = `$${amount.toFixed(2)}`;
+                subTotal = subTotal + amount;
+            }
+            document.getElementById('subTotal').textContent = `$${subTotal.toFixed(2)}`;
+
+            let taxAmount = document.getElementById('taxAmount').value;
+            let totalAmount = subTotal;
+            if (!isNaN(taxAmount) && taxAmount > 0) {
+                totalAmount = subTotal + Number(taxAmount);
+            }
+            document.getElementById('totalAmount').textContent = `$${totalAmount.toFixed(2)}`;
+        }
+
+        async function loadInvoiceDataById(invoiceId) {
+            try {
+                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getInvoice?invoiceId=' + invoiceId);
+                if (response.status == 400) {
+                    hideLoader();
+                    document.getElementById('invoiceForm').style.display = "none";
+                    document.getElementById('invoiceIdErrorMessage').style.display = "block";
+                } else {
+                    const data = await response.json();
+                    await loadInvoiceData(data);
+                }
+            } catch (err) {
+                console.error('Error fetching invoice data:', err);
+                hideLoader();
+                document.getElementById('invoiceForm').style.display = "none";
+                document.getElementById('invoiceIdErrorMessage').style.display = "block";
+            }
+        }
+
+        function toDateInputValue(date) {
+            return date.toISOString().split("T")[0];
+        }
+
+        async function loadInvoiceDataByTicket(tik) {
+            try {
+                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getInvoiceByTicket?ticketNumber=' + tik);
+                if (response.status == 400) {
+                    hideLoader();
+                    document.getElementById('invoiceForm').style.display = "none";
+                    document.getElementById('invoiceIdErrorMessage').style.display = "block";
+                } else {
+                    const data = await response.json();
+                    await loadInvoiceData(data);
+                }
+            } catch (err) {
+                console.error('Error fetching invoice data:', err);
+                hideLoader();
+                document.getElementById('invoiceForm').style.display = "none";
+                document.getElementById('invoiceIdErrorMessage').style.display = "block";
+            }
+        }
+
+        async function loadInvoiceData(data) {
+            
+            // invoice details
+            document.getElementById('invoiceId').value = data.invoice.invoiceId;
+            document.getElementById('ticketNumber').textContent = data.invoice.ticketNumberPreface + String(data.invoice.ticketNumber).padStart(4, "0");
+            document.getElementById('invoiceNumber').value = data.invoice.invoiceNumber;
+            document.getElementById('invoiceDate').value = toDateInputValue(new Date(data.invoice.invoiceDate));
+            document.getElementById('companyName').value = data.invoice.companyName;
+            document.getElementById('leaseWellNumber').textContent = data.invoice.leaseNumber;
+            document.getElementById('jobDescription').textContent = data.invoice.jobDescription;
+            document.getElementById('receivedBy').value = data.invoice.receivedBy;
+
+            // line items
+            let cnt = 1;
+            let subTotal = 0;
+            data.invoice.lineItems.forEach(lineItem => {
+                let amt = Number(lineItem.quantity * lineItem.rate);
+                document.getElementById('lineitem_qty_' + cnt).value = lineItem.quantity;
+                document.getElementById('lineitem_name_' + cnt).value = lineItem.name;
+                document.getElementById('lineitem_rate_' + cnt).value = lineItem.rate;
+                document.getElementById('lineitem_amount_' + cnt).textContent = `$${amt.toFixed(2)}`;
+                subTotal = subTotal + amt;
+                cnt = cnt + 1;
+            });
+
+            // calculations                                       
+            let taxAmount = data.invoice.taxAmount | 0;
+            let totalAmount = taxAmount + subTotal;
+            document.getElementById('taxAmount').value = taxAmount;
+            document.getElementById('subTotal').textContent = `$${subTotal.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = `$${totalAmount.toFixed(2)}`;
+
+            // submission details 
+            document.getElementById('submittedBy').textContent = data.invoice.user;
+            document.getElementById('submittedDttm').textContent = new Date(data.invoice.submittedDttm).toLocaleString();
+
+            hideLoader();
+        }
+
+        async function saveInvoice(data) {
+            try {
+                console.log("inside saveInvoice...");
+
+                const response = await fetch("https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/saveInvoice", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const retData = await response.json();
+                data.invoiceId = retData.invoiceId;
+                console.log(data);
+
+                window.location.href = "full-size.html?id=" + data.invoiceId;
+
+                return true;
+
+            } catch (err) {
+                showErrorMessage();
+                console.error("Error submitting invoice:", err);
+                return null;
+            }
+        }
+
+        showLoader();
+        const params = new URLSearchParams(window.location.search);
+        const invoiceId = params.get("id");
+        console.log("Invoice ID:", invoiceId);
+
+        if (invoiceId != null) {
+            loadInvoiceDataById(invoiceId);
+            document.getElementById('invoiceIdErrorMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "block";
+        } else {
+            const ticketNumber = params.get("ticket");
+            console.log("Ticket Number:", ticketNumber);
+            if (ticketNumber != null) {
+                loadInvoiceDataByTicket(ticketNumber);
+                document.getElementById('invoiceIdErrorMessage').style.display = "none";
+                document.getElementById('invoiceForm').style.display = "block";
+            } else {
+                hideLoader();
+                document.getElementById('invoiceForm').style.display = "none";
+                document.getElementById('invoiceIdErrorMessage').style.display = "block";
+            }
+        }
+
+        document.getElementById("invoiceForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            console.log('inside event listener on submit...');
+
+            const lineItems = [];
+            for (let i = 1; i <= 10; i++) {
+                let qty = parseFloat(document.getElementById('lineitem_qty_' + i).value) || 0;
+                if (qty > 0) {
+                    lineItems.push({
+                        quantity: qty,
+                        rate: parseFloat(document.getElementById('lineitem_rate_' + i).value) || 0,
+                        name: document.getElementById('lineitem_name_' + i).value
+                    });
+                }
+            }
+
+            console.log(lineItems);
+
+            let invId = Number(document.getElementById('invoiceId').value);
+
+            console.log(invId);
+
+            subTotal = document.getElementById('subTotal').textContent;
+            taxAmount = document.getElementById('taxAmount').value;
+            totalAmount = document.getElementById('totalAmount').textContent;
+            userName = '';
+            userId = 0;
+            fullTicketNumber = document.getElementById('ticketNumber').textContent;
+
+            if (isNaN(taxAmount) || taxAmount == "") {
+                taxAmount = 0;
+            }
+
+            const data = {
+                invoiceId: invId,
+                userId: userId,
+                user: userName,
+                fullTicketNumber: fullTicketNumber,
+                ticketNumber: ticketNumber.textContent,
+                companyName: companyName.value,
+                invoiceNumber: invoiceNumber.value,
+                invoiceDate: invoiceDate.value,
+                leaseNumber: leaseWellNumber.value,
+                jobDescription: jobDescription.value,
+                lineItems: lineItems,
+                subTotal: subTotal,
+                taxAmount: taxAmount,
+                totalAmount: totalAmount,
+                receivedBy: receivedBy.value
+            };
+
+            console.log("Submitting invoice:", data);
+
+            document.getElementById('loadingMessage').style.display = "block";
+            document.getElementById('invoiceForm').style.display = "none";
+
+            saveInvoice(data);            
+        });
+
+    </script>
+</body>
+
+</html>
