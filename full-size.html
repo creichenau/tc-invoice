@@ -199,7 +199,10 @@
             // invoice details
             document.getElementById('ticketNumber').textContent = data.invoice.ticketNumberPreface + String(data.invoice.ticketNumber).padStart(4, "0");
             document.getElementById('invoiceNumber').textContent = data.invoice.invoiceNumber;
-            document.getElementById('invoiceDate').textContent = new Date(data.invoice.invoiceDate).toLocaleDateString();
+
+            const sqlDate = data.invoice.invoiceDate; // "2026-03-17T00:00:00.000Z"
+            document.getElementById('invoiceDate').textContent = sqlDate.split("T")[0];
+            
             document.getElementById('companyName').textContent = data.invoice.companyName;
             document.getElementById('leaseWellNumber').textContent = data.invoice.leaseNumber;
             document.getElementById('jobDescription').textContent = data.invoice.jobDescription;
