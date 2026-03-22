@@ -81,7 +81,14 @@
             <span id="invoiceDate" style="position:absolute; top: 189px; left: 580px; font-size: 14pt;"></span>
             <span id="companyName" style="position:absolute; top: 223px; left: 194px; font-size: 14pt;"></span>
             <span id="leaseWellNumber" style="position:absolute; top: 253px; left: 305px; font-size: 14pt;"></span>
-            <span id="jobDescription" style="position:absolute; top: 316px; left: 206px; font-size: 14pt;"></span>
+
+            <!-- Job Description -->
+            <span id="jobDescription_1" style="position:absolute; top: 316px; left: 206px; font-size: 14pt;"></span>
+            <span id="jobDescription_2" style="position:absolute; top: 347px; left: 92px; font-size: 14pt;"></span>
+            <span id="jobDescription_3" style="position:absolute; top: 379px; left: 92px; font-size: 14pt;"></span>
+            <span id="jobDescription_4" style="position:absolute; top: 410px; left: 92px; font-size: 14pt;"></span>
+            <span id="jobDescription_5" style="position:absolute; top: 448px; left: 92px; font-size: 14pt;"></span>
+
             <span id="subTotal" style="position:absolute; top: 1032px; left: 726px; font-size: 14pt;">$0.00</span>
             <span id="taxAmount" style="position:absolute; top: 1068px; left: 726px; font-size: 14pt;">$0.00</span>
             <span id="totalAmount" style="position:absolute; top: 1105px; left: 726px; font-size: 14pt;">$0.00</span>
@@ -141,7 +148,8 @@
         </div>
     </form>
     <div class="center-screen">
-        <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>. <a id="editLink" href='#'>Edit</a></p>
+        <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>. <a id="editLink"
+                href='#'>Edit</a></p>
     </div>
     <script>
 
@@ -155,6 +163,42 @@
             document.getElementById('loadingMessage').style.display = "none";
             document.getElementById('invoiceForm').style.display = "block";
             document.getElementById('invoiceIdErrorMessage').style.display = "none";
+        }
+
+        function splitIntoLines(text, maxLen = 40, maxLines = 6) {
+            const rawLines = text.split(/\r?\n/);   // keep user-entered line breaks
+            const finalLines = [];
+
+            for (const raw of rawLines) {
+                let line = raw.trim();
+
+                while (line.length > 0) {
+                    if (line.length <= maxLen) {
+                        finalLines.push(line);
+                        break;
+                    }
+
+                    // find last space within maxLen
+                    let breakPos = line.lastIndexOf(" ", maxLen);
+
+                    // if no space found, hard break
+                    if (breakPos === -1) breakPos = maxLen;
+
+                    finalLines.push(line.slice(0, breakPos).trim());
+                    line = line.slice(breakPos).trim();
+
+                    if (finalLines.length >= maxLines) break;
+                }
+
+                if (finalLines.length >= maxLines) break;
+            }
+
+            // pad with empty lines if needed
+            while (finalLines.length < maxLines) {
+                finalLines.push("");
+            }
+
+            return finalLines.slice(0, maxLines);
         }
 
         async function loadInvoiceDataById(invoiceId) {
@@ -202,10 +246,15 @@
 
             const sqlDate = data.invoice.invoiceDate; // "2026-03-17T00:00:00.000Z"
             document.getElementById('invoiceDate').textContent = sqlDate.split("T")[0];
-            
+
             document.getElementById('companyName').textContent = data.invoice.companyName;
             document.getElementById('leaseWellNumber').textContent = data.invoice.leaseNumber;
-            document.getElementById('jobDescription').textContent = data.invoice.jobDescription;
+
+            const lines = splitIntoLines(data.invoice.jobDescription, 80, 5);
+            for (let i = 0; i < 5; i++) {
+                document.getElementById(`jobDescription_${i + 1}`).textContent = lines[i];
+            }
+
             document.getElementById('receivedBy').textContent = data.invoice.receivedBy;
 
             // line items
