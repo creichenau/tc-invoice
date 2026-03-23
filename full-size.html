@@ -320,7 +320,7 @@
                 margin: 10,
                 filename: invoice_name,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 0.8, useCORS: true },
+                html2canvas: { scale: 0.8, useCORS: true, width: element.clientWidth },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
