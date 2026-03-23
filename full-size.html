@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>T&K Services Field Ticket</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,6 +40,8 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             position: relative;
+            transform: none !important;
+            zoom: 1 !important;
         }
 
         .form-background {
@@ -75,81 +78,94 @@
         </div>
     </div>
     <form id="invoiceForm">
-        <div class="invoice-container form-background">
-            <span id="ticketNumber" style="position:absolute; top: 97px; left: 723px; font-size: 18pt;"></span>
-            <span id="invoiceNumber" style="position:absolute; top: 149px; left: 580px; font-size: 14pt;"></span>
-            <span id="invoiceDate" style="position:absolute; top: 189px; left: 580px; font-size: 14pt;"></span>
-            <span id="companyName" style="position:absolute; top: 223px; left: 194px; font-size: 14pt;"></span>
-            <span id="leaseWellNumber" style="position:absolute; top: 253px; left: 305px; font-size: 14pt;"></span>
+        <div id="pdfWrapper">
+            <div id="invoiceFormDiv" class="invoice-container form-background">
+                <span id="ticketNumber" style="position:absolute; top: 97px; left: 723px; font-size: 18pt;"></span>
+                <span id="invoiceNumber" style="position:absolute; top: 149px; left: 580px; font-size: 14pt;"></span>
+                <span id="invoiceDate" style="position:absolute; top: 189px; left: 580px; font-size: 14pt;"></span>
+                <span id="companyName" style="position:absolute; top: 223px; left: 194px; font-size: 14pt;"></span>
+                <span id="leaseWellNumber" style="position:absolute; top: 253px; left: 305px; font-size: 14pt;"></span>
 
-            <!-- Job Description -->
-            <span id="jobDescription_1" style="position:absolute; top: 316px; left: 206px; font-size: 14pt;"></span>
-            <span id="jobDescription_2" style="position:absolute; top: 347px; left: 92px; font-size: 14pt;"></span>
-            <span id="jobDescription_3" style="position:absolute; top: 379px; left: 92px; font-size: 14pt;"></span>
-            <span id="jobDescription_4" style="position:absolute; top: 410px; left: 92px; font-size: 14pt;"></span>
-            <span id="jobDescription_5" style="position:absolute; top: 448px; left: 92px; font-size: 14pt;"></span>
+                <!-- Job Description -->
+                <span id="jobDescription_1" style="position:absolute; top: 316px; left: 206px; font-size: 14pt;"></span>
+                <span id="jobDescription_2" style="position:absolute; top: 347px; left: 92px; font-size: 14pt;"></span>
+                <span id="jobDescription_3" style="position:absolute; top: 379px; left: 92px; font-size: 14pt;"></span>
+                <span id="jobDescription_4" style="position:absolute; top: 410px; left: 92px; font-size: 14pt;"></span>
+                <span id="jobDescription_5" style="position:absolute; top: 448px; left: 92px; font-size: 14pt;"></span>
 
-            <span id="subTotal" style="position:absolute; top: 1032px; left: 726px; font-size: 14pt;">$0.00</span>
-            <span id="taxAmount" style="position:absolute; top: 1068px; left: 726px; font-size: 14pt;">$0.00</span>
-            <span id="totalAmount" style="position:absolute; top: 1105px; left: 726px; font-size: 14pt;">$0.00</span>
-            <span id="receivedBy" style="position:absolute; top: 1102px; left: 183px; font-size: 14pt;"></span>
+                <span id="subTotal" style="position:absolute; top: 1032px; left: 726px; font-size: 14pt;">$0.00</span>
+                <span id="taxAmount" style="position:absolute; top: 1068px; left: 726px; font-size: 14pt;">$0.00</span>
+                <span id="totalAmount"
+                    style="position:absolute; top: 1105px; left: 726px; font-size: 14pt;">$0.00</span>
+                <span id="receivedBy" style="position:absolute; top: 1102px; left: 183px; font-size: 14pt;"></span>
 
-            <!-- Line Items -->
-            <span id="lineitem_qty_1" style="position:absolute; top: 571px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_1" style="position:absolute; top: 571px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_1" style="position:absolute; top: 571px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_1" style="position:absolute; top: 571px; left: 794px; font-size: 14pt;"></span>
+                <!-- Line Items -->
+                <span id="lineitem_qty_1" style="position:absolute; top: 571px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_1" style="position:absolute; top: 571px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_1" style="position:absolute; top: 571px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_1"
+                    style="position:absolute; top: 571px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_2" style="position:absolute; top: 609px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_2" style="position:absolute; top: 609px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_2" style="position:absolute; top: 609px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_2" style="position:absolute; top: 609px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_2" style="position:absolute; top: 609px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_2" style="position:absolute; top: 609px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_2" style="position:absolute; top: 609px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_2"
+                    style="position:absolute; top: 609px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_3" style="position:absolute; top: 643px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_3" style="position:absolute; top: 643px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_3" style="position:absolute; top: 643px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_3" style="position:absolute; top: 643px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_3" style="position:absolute; top: 643px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_3" style="position:absolute; top: 643px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_3" style="position:absolute; top: 643px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_3"
+                    style="position:absolute; top: 643px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_4" style="position:absolute; top: 678px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_4" style="position:absolute; top: 678px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_4" style="position:absolute; top: 678px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_4" style="position:absolute; top: 678px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_4" style="position:absolute; top: 678px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_4" style="position:absolute; top: 678px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_4" style="position:absolute; top: 678px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_4"
+                    style="position:absolute; top: 678px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_5" style="position:absolute; top: 715px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_5" style="position:absolute; top: 715px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_5" style="position:absolute; top: 715px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_5" style="position:absolute; top: 715px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_5" style="position:absolute; top: 715px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_5" style="position:absolute; top: 715px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_5" style="position:absolute; top: 715px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_5"
+                    style="position:absolute; top: 715px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_6" style="position:absolute; top: 751px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_6" style="position:absolute; top: 751px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_6" style="position:absolute; top: 751px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_6" style="position:absolute; top: 751px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_6" style="position:absolute; top: 751px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_6" style="position:absolute; top: 751px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_6" style="position:absolute; top: 751px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_6"
+                    style="position:absolute; top: 751px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_7" style="position:absolute; top: 786px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_7" style="position:absolute; top: 786px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_7" style="position:absolute; top: 786px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_7" style="position:absolute; top: 786px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_7" style="position:absolute; top: 786px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_7" style="position:absolute; top: 786px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_7" style="position:absolute; top: 786px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_7"
+                    style="position:absolute; top: 786px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_8" style="position:absolute; top: 821px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_8" style="position:absolute; top: 821px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_8" style="position:absolute; top: 821px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_8" style="position:absolute; top: 821px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_8" style="position:absolute; top: 821px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_8" style="position:absolute; top: 821px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_8" style="position:absolute; top: 821px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_8"
+                    style="position:absolute; top: 821px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_9" style="position:absolute; top: 857px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_9" style="position:absolute; top: 857px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_9" style="position:absolute; top: 857px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_9" style="position:absolute; top: 857px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_9" style="position:absolute; top: 857px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_9" style="position:absolute; top: 857px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_9" style="position:absolute; top: 857px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_9"
+                    style="position:absolute; top: 857px; left: 794px; font-size: 14pt;"></span>
 
-            <span id="lineitem_qty_10" style="position:absolute; top: 893px; left: 65px; font-size: 14pt;"></span>
-            <span id="lineitem_name_10" style="position:absolute; top: 893px; left: 155px; font-size: 14pt;"></span>
-            <span id="lineitem_rate_10" style="position:absolute; top: 893px; left: 688px; font-size: 14pt;"></span>
-            <span id="lineitem_amount_10" style="position:absolute; top: 893px; left: 794px; font-size: 14pt;"></span>
+                <span id="lineitem_qty_10" style="position:absolute; top: 893px; left: 65px; font-size: 14pt;"></span>
+                <span id="lineitem_name_10" style="position:absolute; top: 893px; left: 155px; font-size: 14pt;"></span>
+                <span id="lineitem_rate_10" style="position:absolute; top: 893px; left: 688px; font-size: 14pt;"></span>
+                <span id="lineitem_amount_10"
+                    style="position:absolute; top: 893px; left: 794px; font-size: 14pt;"></span>
 
+            </div>
         </div>
     </form>
     <div class="center-screen">
         <p>Submitted by <span id="submittedBy">ERROR</span> on <span id="submittedDttm">ERROR</span>. <a id="editLink"
-                href='#'>Edit</a></p>
+                href='#'>Edit</a>&nbsp;|&nbsp;<a id="exportLink" href='#'>Export</a></p>
     </div>
     <script>
 
@@ -291,6 +307,32 @@
         const params = new URLSearchParams(window.location.search);
         const invoiceId = params.get("id");
         console.log("Invoice ID:", invoiceId);
+
+        document.getElementById("exportLink").onclick = () => {
+            let ticket_num = document.getElementById('ticketNumber').textContent;
+            const element = document.getElementById('pdfWrapper');
+            let invoice_name = "field_ticket_" + ticket_num + "_" + invoiceId + ".pdf";
+
+            const originalMarginTop = element.style.marginTop;
+            element.style.marginTop = "-180px";
+
+            const opt = {
+                margin: 10,
+                filename: invoice_name,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 0.8, useCORS: true, height: 1250, width: element.clientWidth },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf()
+                .set(opt)
+                .from(element)
+                .save()
+                .then(() => {
+                    // Restore the original layout after PDF is done
+                    element.style.marginTop = originalMarginTop;
+                });
+        };
 
         if (invoiceId != null) {
             loadInvoiceDataById(invoiceId);
