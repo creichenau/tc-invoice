@@ -84,7 +84,10 @@
                 <span id="invoiceNumber" style="position:absolute; top: 149px; left: 580px; font-size: 14pt;"></span>
                 <span id="invoiceDate" style="position:absolute; top: 189px; left: 580px; font-size: 14pt;"></span>
                 <span id="companyName" style="position:absolute; top: 223px; left: 194px; font-size: 14pt;"></span>
-                <span id="leaseWellNumber" style="position:absolute; top: 253px; left: 305px; font-size: 14pt;"></span>
+                
+                <!-- Lease and well number -->
+                <span id="leaseWellNumber_1" style="position:absolute; top: 253px; left: 305px; font-size: 14pt;"></span>
+                <span id="leaseWellNumber_2" style="position:absolute; top: 286px; left: 89px; font-size: 14pt;"></span>
 
                 <!-- Job Description -->
                 <span id="jobDescription_1" style="position:absolute; top: 316px; left: 206px; font-size: 14pt;"></span>
@@ -264,7 +267,11 @@
             document.getElementById('invoiceDate').textContent = sqlDate.split("T")[0];
 
             document.getElementById('companyName').textContent = data.invoice.companyName;
-            document.getElementById('leaseWellNumber').textContent = data.invoice.leaseNumber;
+
+            const leaseWellLines = splitIntoLines(data.invoice.leaseNumber, 60, 2);
+            for (let i = 0; i < 2; i++) {
+                document.getElementById(`leaseWellNumber_${i + 1}`).textContent = leaseWellLines[i];
+            }
 
             const lines = splitIntoLines(data.invoice.jobDescription, 80, 5);
             for (let i = 0; i < 5; i++) {
