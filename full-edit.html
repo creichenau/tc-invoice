@@ -230,7 +230,7 @@
 
         async function loadInvoiceDataById(invoiceId) {
             try {
-                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getInvoice?invoiceId=' + invoiceId);
+                const response = await fetch('https://tandcinvoiceapp.ambitiousstone-01430a7d.westus.azurecontainerapps.io/api/getInvoice?invoiceId=' + invoiceId);
                 if (response.status == 400) {
                     hideLoader();
                     document.getElementById('invoiceForm').style.display = "none";
@@ -253,7 +253,7 @@
 
         async function loadInvoiceDataByTicket(tik) {
             try {
-                const response = await fetch('https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/getInvoiceByTicket?ticketNumber=' + tik);
+                const response = await fetch('https://tandcinvoiceapp.ambitiousstone-01430a7d.westus.azurecontainerapps.io/api/getInvoiceByTicket?ticketNumber=' + tik);
                 if (response.status == 400) {
                     hideLoader();
                     document.getElementById('invoiceForm').style.display = "none";
@@ -271,21 +271,23 @@
         }
 
         async function loadInvoiceData(data) {
+
+            console.log(data);
             
             // invoice details
-            document.getElementById('invoiceId').value = data.invoice.invoiceId;
-            document.getElementById('ticketNumber').textContent = data.invoice.ticketNumberPreface + String(data.invoice.ticketNumber).padStart(4, "0");
-            document.getElementById('invoiceNumber').value = data.invoice.invoiceNumber;
-            document.getElementById('invoiceDate').value = toDateInputValue(new Date(data.invoice.invoiceDate));
-            document.getElementById('companyName').value = data.invoice.companyName;
-            document.getElementById('leaseWellNumber').textContent = data.invoice.leaseNumber;
-            document.getElementById('jobDescription').textContent = data.invoice.jobDescription;
-            document.getElementById('receivedBy').value = data.invoice.receivedBy;
+            document.getElementById('invoiceId').value = data.invoiceId;
+            document.getElementById('ticketNumber').textContent = data.ticketNumberPreface + String(data.ticketNumber).padStart(4, "0");
+            document.getElementById('invoiceNumber').value = data.invoiceNumber;
+            document.getElementById('invoiceDate').value = toDateInputValue(new Date(data.invoiceDate));
+            document.getElementById('companyName').value = data.companyName;
+            document.getElementById('leaseWellNumber').textContent = data.leaseNumber;
+            document.getElementById('jobDescription').textContent = data.jobDescription;
+            document.getElementById('receivedBy').value = data.receivedBy;
 
             // line items
             let cnt = 1;
             let subTotal = 0;
-            data.invoice.lineItems.forEach(lineItem => {
+            data.lineItems.forEach(lineItem => {
                 let amt = Number(lineItem.quantity * lineItem.rate);
                 document.getElementById('lineitem_qty_' + cnt).value = lineItem.quantity;
                 document.getElementById('lineitem_name_' + cnt).value = lineItem.name;
@@ -296,15 +298,15 @@
             });
 
             // calculations                                       
-            let taxAmount = data.invoice.taxAmount | 0;
+            let taxAmount = data.taxAmount | 0;
             let totalAmount = taxAmount + subTotal;
             document.getElementById('taxAmount').value = taxAmount;
             document.getElementById('subTotal').textContent = `$${subTotal.toFixed(2)}`;
             document.getElementById('totalAmount').textContent = `$${totalAmount.toFixed(2)}`;
 
             // submission details 
-            document.getElementById('submittedBy').textContent = data.invoice.user;
-            document.getElementById('submittedDttm').textContent = new Date(data.invoice.submittedDttm).toLocaleString();
+            document.getElementById('submittedBy').textContent = data.user;
+            document.getElementById('submittedDttm').textContent = new Date(data.submittedDttm).toLocaleString();
 
             hideLoader();
         }
@@ -313,7 +315,7 @@
             try {
                 console.log("inside saveInvoice...");
 
-                const response = await fetch("https://invoicetracker-cmgkcjhkg2hndfdq.canadacentral-01.azurewebsites.net/api/saveInvoice", {
+                const response = await fetch("https://tandcinvoiceapp.ambitiousstone-01430a7d.westus.azurecontainerapps.io/api/saveInvoice", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
