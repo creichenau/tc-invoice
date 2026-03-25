@@ -224,7 +224,7 @@
             return finalLines.slice(0, maxLines);
         }
 
-        function fetchWithTimeout(url, options = {}, timeout = 5000) {
+        function fetchWithTimeout(url, options = {}, timeout = 8000) {
             return new Promise((resolve, reject) => {
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
@@ -241,7 +241,7 @@
             });
         }
 
-        async function fetchWithRetry(url, options = {}, timeout = 5000, retries = 3) {
+        async function fetchWithRetry(url, options = {}, timeout = 8000, retries = 3) {
             for (let attempt = 1; attempt <= retries; attempt++) {
                 try {
                     return await fetchWithTimeout(url, options, timeout);
