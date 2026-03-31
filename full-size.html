@@ -61,6 +61,24 @@
             text-align: center;
             /* keeps multi-line text centered */
         }
+
+       #progress-container {
+            width: 60%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 40px auto; /* centers horizontally */
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.2s linear;
+        }
+
+
     </style>
 
 </head>
@@ -75,6 +93,12 @@
         <br />
         <div>
             Please provide the following error to support: <span id="actualErrorMessage"></span>
+            <br><br>
+            The page will reload after this short pause:<br>
+            <br>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
         </div>
     </div>
     <div id="invoiceIdErrorMessage" class="center-screen" style="display:none;">
@@ -203,6 +227,25 @@
             document.getElementById('invoiceForm').style.display = "none";
             document.getElementById('invoiceIdErrorMessage').style.display = "none";
             document.getElementById('loadingFailedErrorMessage').style.display = "block";
+            startProgressAndReload();
+        }
+
+        function startProgressAndReload() {
+            const bar = document.getElementById("progress-bar");
+            const duration = 20000; // 20 seconds
+            const interval = 100;   // update every 100ms
+            let elapsed = 0;
+
+            const timer = setInterval(() => {
+                elapsed += interval;
+                const percent = Math.min((elapsed / duration) * 100, 100);
+                bar.style.width = percent + "%";
+
+                if (percent >= 100) {
+                    clearInterval(timer);
+                    location.reload();
+                }
+            }, interval);
         }
 
         function splitIntoLines(text, maxLen = 40, maxLines = 6) {
