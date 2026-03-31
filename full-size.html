@@ -70,6 +70,13 @@
         <b style="margin-left: 47%">Loading Invoice...</b>
         <div id="loader" class="spinner"></div>
     </div>
+    <div id="loadingFailedErrorMessage" class="center-screen" style="display:none;">
+        <b>Unable to connect to services</b><br>
+        <br />
+        <div>
+            Please provide the following error to support: <span id="actualErrorMessage"></span>
+        </div>
+    </div>
     <div id="invoiceIdErrorMessage" class="center-screen" style="display:none;">
         <b>No Invoice ID Detected</b><br>
         <br />
@@ -180,12 +187,22 @@
             document.getElementById('loadingMessage').style.display = "block";
             document.getElementById('invoiceForm').style.display = "none";
             document.getElementById('invoiceIdErrorMessage').style.display = "none";
+            document.getElementById('loadingFailedErrorMessage').style.display = "none";
         }
 
         function hideLoader() {
             document.getElementById('loadingMessage').style.display = "none";
             document.getElementById('invoiceForm').style.display = "block";
             document.getElementById('invoiceIdErrorMessage').style.display = "none";
+            document.getElementById('loadingFailedErrorMessage').style.display = "none";
+        }
+
+        function showLoadingFailed(errorMessage) {
+            document.getElementById('actualErrorMessage').textContent = errorMessage;
+            document.getElementById('loadingMessage').style.display = "none";
+            document.getElementById('invoiceForm').style.display = "none";
+            document.getElementById('invoiceIdErrorMessage').style.display = "none";
+            document.getElementById('loadingFailedErrorMessage').style.display = "block";
         }
 
         function splitIntoLines(text, maxLen = 40, maxLines = 6) {
@@ -224,7 +241,7 @@
             return finalLines.slice(0, maxLines);
         }
 
-        function fetchWithTimeout(url, options = {}, timeout = 8000) {
+        function fetchWithTimeout(url, options = {}, timeout = 15000) {
             return new Promise((resolve, reject) => {
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
@@ -251,7 +268,7 @@
                     if (attempt === retries) throw err;
 
                     // Backoff delay: 500ms, 1000ms, 1500ms...
-                    await new Promise(res => setTimeout(res, attempt * 500));
+                    await new Promise(res => setTimeout(res, attempt * 1500));
                 }
             }
         }
@@ -260,7 +277,7 @@
             const url = 'https://tandcinvoiceapp.ambitiousstone-01430a7d.westus.azurecontainerapps.io/api/getInvoice?invoiceId=' + invoiceId;
 
             try {
-                const response = await fetchWithRetry(url, {}, 5000, 3);
+                const response = await fetchWithRetry(url, {}, 10000, 3);
                 if (response.status === 400) {
                     hideLoader();
                     document.getElementById('invoiceForm').style.display = "none";
@@ -272,9 +289,7 @@
 
             } catch (err) {
                 console.error('Error fetching invoice data:', err);
-                hideLoader();
-                document.getElementById('invoiceForm').style.display = "none";
-                document.getElementById('invoiceIdErrorMessage').style.display = "block";
+                showLoadingFailed(err);
             }
         }
 
@@ -282,7 +297,7 @@
             const url = 'https://tandcinvoiceapp.ambitiousstone-01430a7d.westus.azurecontainerapps.io/api/getInvoiceByTicket?ticketNumber=' + tik;
 
             try {
-                const response = await fetchWithRetry(url, {}, 5000, 3);
+                const response = await fetchWithRetry(url, {}, 10000, 3);
                 if (response.status === 400) {
                     hideLoader();
                     document.getElementById('invoiceForm').style.display = "none";
@@ -294,9 +309,7 @@
 
             } catch (err) {
                 console.error('Error fetching invoice data:', err);
-                hideLoader();
-                document.getElementById('invoiceForm').style.display = "none";
-                document.getElementById('invoiceIdErrorMessage').style.display = "block";
+                showLoadingFailed(err);
             }
         }
 
