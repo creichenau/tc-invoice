@@ -454,7 +454,7 @@
                 document.getElementById(`leaseWellNumber_${i + 1}`).textContent = leaseWellLines[i];
             }
 
-            const lines = splitIntoLines(data.jobDescription, 80, 5);
+            const lines = splitIntoLines(data.jobDescription, 75, 5);
             for (let i = 0; i < 5; i++) {
                 document.getElementById(`jobDescription_${i + 1}`).textContent = lines[i];
             }
